@@ -1,0 +1,28 @@
+back = enter
+start = esc
+select = p
+
+up = w
+down = s
+left = a
+right = d
+
+left_analog_up = w
+left_analog_down = s
+left_analog_left = a
+left_analog_right = d
+
+a = j
+b = k
+x = l
+y = u
+
+l1 = q
+r1 = r
+
+mouse_slow_scale = 50
+
+deadzone_mode = sloped_scaled_axial
+deadzone = 1000
+deadzone_scale = 6
+deadzone_delay = 16

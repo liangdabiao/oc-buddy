@@ -1,0 +1,13 @@
+# Godot engine caches
+.godot/
+import/
+
+# build outputs (pck/zip are rebuilt via export_presets.cfg + packaging)
+.build/
+
+# Python
+__pycache__/
+*.tmp
+
+# local secrets
+settings.local.json
