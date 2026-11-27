@@ -2,6 +2,7 @@
 
 Port of 「带着OC学英语」(upstream oc-english by yczz, Tauri desktop) to the R36S
 handheld. Godot 3.5.3 + FRT runtime, PortMaster three-piece packaging.
+<img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/e9d935cb-e93b-430e-b16a-ecc4f9323c4f" />
 
 **Upstream**: https://github.com/yczz/oc-english — 学习英语赚积分，积分给 OC
 捏脸换装。本仓库是其 R36S 移植版（Godot 3.5.3 + GDScript）。
