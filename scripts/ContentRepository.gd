@@ -100,5 +100,5 @@ func shop_item(item_id: String) -> Dictionary:
 func oc_png(slot: String, key: String) -> String:
 	for piece in oc_manifest.get("pieces", []):
 		if String(piece.get("slot", "")) == slot and String(piece.get("key", "")) == key:
-			return "res://assets/oc/" + String(piece.get("png", ""))
+			return "res://assets/oc/" + String(piece.get("png", "")).replace(".png", ".pngraw")
 	return ""

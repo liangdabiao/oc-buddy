@@ -13,6 +13,7 @@ const BONUS_EXAM_FIRST := 100
 const BONUS_EXAM_IMPROVE := 10
 
 var data: Dictionary = default_data()
+var save_enabled := true       # smoke tests disable disk writes
 
 
 func _ready() -> void:
@@ -53,6 +54,8 @@ func _merge(saved: Dictionary) -> Dictionary:
 
 
 func save_game() -> void:
+	if not save_enabled:
+		return
 	var file := File.new()
 	if file.open(TEMP_PATH, File.WRITE) != OK:
 		push_error("could not write profile")

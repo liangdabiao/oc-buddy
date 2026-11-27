@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 # Layered OC renderer. Mirrors the upstream SVG paint order exactly:
 #   back_art -> hair_back -> armL -> legL(+shoe+bottom leg) -> legR ->
@@ -26,26 +26,18 @@ var texture_scale := 1.0              # 400x600 png drawn at 200x300 local units
 
 func setup(repository, initial_cfg: Dictionary) -> void:
 	repo = repository
-	var df := File.new()
-	df.open("/tmp/ocview.log", File.WRITE)
-	df.store_string("setup begin
-")
-	df.close()
 	cfg = initial_cfg.duplicate(true)
 	for slot in PIECE_ORDER:
-		var sprite := Sprite2D.new()
-		sprite.name = slot
-		sprite.centered = false
-		sprite.scale = Vector2(texture_scale, texture_scale)
-		add_child(sprite)
-		sprites[slot] = sprite
+		var tr: TextureRect = TextureRect.new()
+		tr.name = slot
+		tr.rect_position = Vector2.ZERO
+		tr.rect_size = Vector2(400, 600)
+		tr.expand = true
+		tr.stretch_mode = TextureRect.STRETCH_SCALE
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(tr)
+		sprites[slot] = tr
 	refresh()
-	var df2 := File.new()
-	df2.open("/tmp/ocview.log", File.READ_WRITE)
-	df2.seek_end()
-	df2.store_string("setup end
-")
-	df2.close()
 
 
 func set_cfg(key: String, value) -> void:
@@ -92,7 +84,8 @@ func refresh() -> void:
 		var item_id := String(outfit.get(slot, ""))
 		var layer := _item_layer(slot)
 		if item_id == "":
-			clear_layer(layer, slot)
+			for layer_name in _layer_names(layer):
+				set_png(layer_name, "")
 			continue
 		apply_item(slot, layer, item_id, skin)
 
@@ -141,14 +134,29 @@ func _layer_names(layer: String) -> Array:
 	return [layer]
 
 
+var _tex_cache := {}
+
+
 func set_png(slot: String, path: String) -> void:
-	var sprite: Sprite2D = sprites.get(slot, null)
+	var sprite = sprites.get(slot, null)
 	if sprite == null:
 		return
 	if path == "":
 		sprite.texture = null
 		sprite.visible = false
 		return
-	var tex = load(path) if ResourceLoader.exists(path) else null
+	var tex = _tex_cache.get(path, null)
+	if tex == null:
+		var f := File.new()
+		if f.open(path, File.READ) != OK:
+			sprite.visible = false
+			return
+		var bytes := f.get_buffer(f.get_len())
+		f.close()
+		var img := Image.new()
+		img.load_png_from_buffer(bytes)
+		tex = ImageTexture.new()
+		tex.create_from_image(img)
+		_tex_cache[path] = tex
 	sprite.texture = tex
-	sprite.visible = tex != null
+	sprite.visible = true
